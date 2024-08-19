@@ -15,3 +15,6 @@ a = {
 }
 
 NOT = { has_trait = trench_rat }
+
+
+country_rank >= target_country

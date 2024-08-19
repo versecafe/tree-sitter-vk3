@@ -8,10 +8,6 @@
         "members": [
           {
             "type": "SYMBOL",
-            "name": "_command_or_entry"
-          },
-          {
-            "type": "SYMBOL",
             "name": "comment"
           },
           {
@@ -21,6 +17,10 @@
           {
             "type": "SYMBOL",
             "name": "object_assignment"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "comparison_operation"
           }
         ]
       }
@@ -40,10 +40,6 @@
           }
         ]
       }
-    },
-    "_command_or_entry": {
-      "type": "STRING",
-      "value": "@"
     },
     "variable_assignment": {
       "type": "SEQ",
@@ -128,7 +124,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "bool"
+          "name": "boolean"
         }
       ]
     },
@@ -153,7 +149,7 @@
         }
       ]
     },
-    "bool": {
+    "boolean": {
       "type": "CHOICE",
       "members": [
         {
@@ -163,6 +159,54 @@
         {
           "type": "STRING",
           "value": "no"
+        }
+      ]
+    },
+    "eol": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "comment"
+        },
+        {
+          "type": "STRING",
+          "value": "\n"
+        }
+      ]
+    },
+    "comparison_operator": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "<="
+        },
+        {
+          "type": "STRING",
+          "value": ">="
+        }
+      ]
+    },
+    "comparison_operation": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "varname"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "comparison_operator"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "value"
+            }
+          ]
         }
       ]
     }

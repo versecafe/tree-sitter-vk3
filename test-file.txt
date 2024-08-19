@@ -1,322 +1,452 @@
-namespace = military_tech_events
+bankroll = {
+	groups= {
+		general
+	}
+	requires_approval = no
+	should_notify_third_parties = no
 
-# Test comment
-military_tech_events.401 = {
-	type = country_event
-	placement = scope:rifle_state
-
-	title = military_tech_events.401.t
-	desc = military_tech_events.401.d
-	flavor = military_tech_events.401.f
-
-	duration = 3
-
-	event_image = {
-		video = "unspecific_gears_pistons"
+	unlocking_technologies = {
+		central_banking
 	}
 
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/event_industry.dds"
-
-	trigger = {
-		# triggered by rifling JE
+	selectable = {
+		NOT = { is_country_type = decentralized }
+		is_revolutionary = no
 	}
-	immediate = {
-		random_scope_state = {
-			limit = {
-				any_scope_building = {
-					is_building_type = building_arms_industry
-            		level >= 3
-            		occupancy >= 0.75
-           		    OR = {
-              			has_active_production_method = pm_rifles
-                		has_active_production_method = pm_repeaters
-                		has_active_production_method = pm_bolt_action_rifles
-            		}
-				}
-			}
-			save_scope_as = rifle_state
-			random_scope_building = {
+
+	potential = {
+		scope:target_country = {
+			NOT = { is_country_type = decentralized }
+		}
+	}
+
+	possible = {}
+
+	pact = {
+		cost = 100
+
+		is_two_sided_pact = no
+		show_in_outliner = yes
+		can_be_used_in_sway_offers = yes
+		sway_maneuvers_cost = 10
+
+		relations_progress_per_day = 3 # At 100, +1 relations
+		relations_improvement_max = 80
+
+		income_transfer = 0.20
+		second_country_gets_income_transfer = yes
+		income_transfer_based_on_second_country = yes
+
+		second_modifier = {
+			country_pact_leverage_generation_add = 200
+		}
+
+		weekly_effect = {
+			if = {
 				limit = {
-					is_building_type = building_arms_industry
-					level >= 3
-					occupancy >= 0.75
-		            OR = {
-              			has_active_production_method = pm_rifles
-                		has_active_production_method = pm_repeaters
-                		has_active_production_method = pm_bolt_action_rifles
-            		}
+					NOT = { scope:diplomatic_pact ?= { is_forced_pact = yes } }
 				}
-				save_scope_as = rifle_factory
-			}
-		}
-		g:small_arms = {
-			save_scope_as = small_arms_good
-		}
-	}
-
-	option = { #
-		name = military_tech_events.401.a
-		default_option = yes
-		scope:rifle_state = {
-			add_modifier = {
-				name = modern_rifle_arsenal
-				months = long_modifier_time
-			}
-		}
-	}
-	option = { #
-		name = military_tech_events.401.b
-		add_technology_progress = {
-			progress = 4150 technology = repeaters
-		}
-		scope:rifle_state = {
-			add_modifier = {
-				name = arsenal_proving_ground
-				months = long_modifier_time
-			}
-		}
-	}
-}
-
-military_tech_events.402 = {
-	type = country_event
-	placement = ROOT
-
-	title = military_tech_events.402.t
-	desc = military_tech_events.402.d
-	flavor = military_tech_events.402.f
-
-	duration = 3
-
-	event_image = {
-		video = "europenorthamerica_before_the_battle"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/event_military.dds"
-
-	trigger = {
-		# triggered by machine guns JE
-	}
-	immediate = {
-		random_scope_war = {
-			limit = {
-				any_scope_front = {
-					any_scope_general = {
-						owner = ROOT
-						this.commander_military_formation = {
-							has_mobilization_option = mobilization_option:mobilization_option_machinegunners
+				custom_tooltip = {
+					text = bankroll_weekly_obligation_effect
+					if = {
+						limit = {
+							root = {
+								owes_obligation_to = scope:target_country
+							}
+						}
+						random_list = {
+							998 = {}
+							2 = { root = { set_owes_obligation_to = { country = scope:target_country setting = no } } }
+						}
+					}
+					else_if = {
+						limit = {
+							NOT = {
+								scope:target_country = {
+									owes_obligation_to = root
+								}
+							}
+						}
+						random_list = {
+							998 = {}
+							2 = { scope:target_country = { set_owes_obligation_to = { country = root setting = yes } } }
 						}
 					}
 				}
 			}
-			save_scope_as = machine_gun_war
-			random_scope_front = {
-				limit = {
-					any_scope_general = {
-						owner = ROOT
-						this.commander_military_formation = {
-							has_mobilization_option = mobilization_option:mobilization_option_machinegunners
-						}
-					}
-				}
-				random_scope_general = {
-					limit = {
-						owner = ROOT
-						this.commander_military_formation = {
-							has_mobilization_option = mobilization_option:mobilization_option_machinegunners
-						}
-					}
-					save_scope_as = machine_gun_general
+		}
+
+		requirement_to_maintain = {
+			trigger = {
+				has_diplomatic_relevance = scope:target_country
+			}
+		}
+
+	 	requirement_to_maintain = {
+			trigger = {
+				custom_tooltip = {
+					text = DIPLO_ACTION_RELATIONS_POOR_OR_LESS_NOT
+					scope:target_country.relations:root > relations_threshold:poor
 				}
 			}
-			random_country = {
-				limit = {
-					has_war_with = ROOT
+
+			show_about_to_break_warning = {
+				scope:target_country.relations:root <= -17 # this is: poor + 3
+				scope:target_country.relations_change_rate:root < 0
+			}
+		}
+
+		requirement_to_maintain = {
+			trigger = {
+				custom_tooltip = {
+					text = "DIPLOMATIC_PACT_REQUIREMENT_NOT_DECENTRALIZED"
+					NOT = { is_country_type = decentralized }
+					scope:target_country = {
+						NOT = { is_country_type = decentralized }
+					}
 				}
-				save_scope_as = machine_gun_enemy
+			}
+		}
+
+		requirement_to_maintain = {
+			trigger = {
+				custom_tooltip = {
+					text = "DIPLOMATIC_PACT_REQUIREMENT_AT_PEACE"
+					NOT = { has_war_with = scope:target_country }
+				}
+			}
+		}
+
+		requirement_to_maintain = {
+			trigger = {
+				country_rank >= scope:target_country.country_rank
+			}
+		}
+
+		requirement_to_maintain = {
+			trigger = {
+				in_default = no
 			}
 		}
 	}
-	option = { # the enemy does have machine guns
-		name = military_tech_events.402.a
-		default_option = yes
-		trigger = {	# This event is available if the enemy has machine guns researched
-			scope:machine_gun_enemy = {
-				has_technology_researched = automatic_machine_guns
+
+	ai = {
+		max_influence_spending_fraction = 0.20
+
+		evaluation_chance = {
+			value = 0.0
+
+			if = {
+				limit = { country_rank >= rank_value:major_power }
+				add = {
+					value = country_rank
+					multiply = 0.05
+				}
 			}
 		}
-		scope:machine_gun_general = {
-			add_modifier = {
-				name = machine_gun_expertise_low
-				months = short_modifier_time
+
+		# This is only used for determining the value of a bankroll in sways, so it follows different logic from normal action acceptance
+		# The format here is as if scope:actor was asking if root wants a bankroll
+		accept_score = {
+			value = 0
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_BASE"
+				value = 5
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_RANK"
+
+				if = {
+					limit = { scope:actor = { country_rank < root.country_rank } }
+					value = -5
+				}
+
+				if = {
+					limit = { scope:actor = { country_rank > root.country_rank } }
+					value = 5
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_GDP"
+				value = "scope:actor.ai_gdp_comparison(root)"
+				max = 20
+				min = -20
+			}
+
+			if = {
+				limit = { scaled_debt >= 0.05 }
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_DEBT"
+					value = scaled_debt
+					multiply = 30
+					min = 1
+				}
+			}
+			else_if = {
+				limit = { scaled_gold_reserves >= 0.05 }
+
+				subtract = {
+					desc = "DIPLOMATIC_ACCEPTANCE_GOLD_RESERVES"
+					value = scaled_gold_reserves
+					multiply = 20
+					min = 1
+				}
 			}
 		}
-	}
-	option = { # the enemy does not have machine guns
-		name = military_tech_events.402.b
-		trigger = {	# This event is available if the enemy does not have machine guns researched
-			scope:machine_gun_enemy = {
+
+		# This is only used for determining the value of a bankroll in sways, so it follows different logic from normal action acceptance
+		# The format here is as if scope:actor was asking for a bankroll from root
+		junior_accept_score = {
+			value = 0
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_BASE"
+				value = -10
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_RANK"
+
+				if = {
+					limit = { scope:actor = { country_rank > root.country_rank } }
+					value = -5
+				}
+
+				if = {
+					limit = { scope:actor = { country_rank < root.country_rank } }
+					value = 5
+				}
+			}
+
+			subtract = {
+				value = 10
+				multiply = scope:actor.num_income_transfer_pacts
+			}
+
+			subtract = {
+				value = 10
+				multiply = num_income_transfer_pacts
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_GDP"
+				value = "scope:actor.ai_gdp_comparison(root)"
+				add = 2
+				multiply = -10
+				min = -100
+				max = 0
+			}
+
+			if = {
+				limit = { scaled_debt >= 0.05 }
+
+				subtract = {
+					desc = "DIPLOMATIC_ACCEPTANCE_DEBT"
+					value = scaled_debt
+					multiply = 100
+					min = 1
+				}
+			}
+			else_if = {
+				limit = { scaled_gold_reserves >= 0.05 }
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_GOLD_RESERVES"
+					value = scaled_gold_reserves
+					multiply = 25
+					min = 1
+				}
+			}
+		}
+
+		propose_score = {
+			value = 10
+		}
+
+		will_propose = {
+			scaled_debt <= 0
+			is_at_war = no
+			weekly_net_fixed_income > 0
+			has_attitude = {
+				who = scope:target_country
+				attitude = protective
+			}
+			OR = {
+				num_income_transfer_pacts < 1
+				AND = {
+					num_income_transfer_pacts < 2
+					income >= 200000
+				}
+				AND = {
+					num_income_transfer_pacts < 3
+					income >= 400000
+				}
+			}
+
+			OR = {
+				root = {
+					owes_obligation_to = scope:target_country
+				}
 				NOT = {
-					has_technology_researched = automatic_machine_guns
+					scope:target_country = {
+						owes_obligation_to = root
+					}
+				}
+				AND = {
+					is_at_war = no
+					scope:target_country = { is_at_war = yes }
+				}
+			}
+			# We want to have at least five times their income, and at least 50k income in general
+			OR = {
+				AND = {
+					income >= 50000
+					weekly_net_fixed_income >= 4000
+					scope:target_country.income <= 10000
+				}
+				AND = {
+					income >= 75000
+					weekly_net_fixed_income >= 6000
+					scope:target_country.income <= 15000
+				}
+				AND = {
+					income >= 100000
+					weekly_net_fixed_income >= 8000
+					scope:target_country.income <= 20000
+				}
+				AND = {
+					income >= 125000
+					weekly_net_fixed_income >= 10000
+					scope:target_country.income <= 25000
+				}
+				AND = {
+					income >= 150000
+					weekly_net_fixed_income >= 12000
+					scope:target_country.income <= 30000
+				}
+				AND = {
+					income >= 175000
+					weekly_net_fixed_income >= 14000
+					scope:target_country.income <= 35000
+				}
+				AND = {
+					income >= 200000
+					weekly_net_fixed_income >= 16000
+					scope:target_country.income <= 40000
+				}
+				AND = {
+					income >= 225000
+					weekly_net_fixed_income >= 18000
+					scope:target_country.income <= 45000
+				}
+				AND = {
+					income >= 250000
+					weekly_net_fixed_income >= 20000
+					scope:target_country.income <= 50000
 				}
 			}
 		}
-		scope:machine_gun_general = {
-			add_modifier = {
-				name = machine_gun_expertise_high
-				months = short_modifier_time
-			}
-		}
-	}
-	option = { # the general becomes adept at defensive warfare
-		name = military_tech_events.402.c
-		trigger = {
-			scope:machine_gun_general = {
-				OR = {
-					NOT = { has_trait = trench_rat }
-					NOT = { has_trait = stalwart_defender }
+
+		will_break = {
+			NOT = {
+				AND = {
+					has_variable = forced_bankroll_time
+					var:forced_bankroll_time ?= scope:target_country
 				}
 			}
-		}
-		if = {
-			limit ={
-				scope:machine_gun_general = {
-					has_trait = stalwart_defender
+			OR = {
+				scaled_debt > 0.25
+				AND = {
+					scaled_debt > 0
+					OR = {
+						weekly_net_fixed_income < 0
+						is_at_war = yes
+					}
+				}
+				NOT = {
+					has_attitude = {
+						who = scope:target_country
+						attitude = protective
+					}
+				}
+				num_income_transfer_pacts > 3
+				AND = {
+					num_income_transfer_pacts > 1
+					OR = {
+						weekly_net_fixed_income < -10000
+						income < 300000
+					}
+				}
+				AND = {
+					num_income_transfer_pacts > 2
+					OR = {
+						weekly_net_fixed_income < -5000
+						income < 500000
+					}
+				}
+				NOR = {
+					root = {
+						owes_obligation_to = scope:target_country
+					}
+					NOT = {
+						scope:target_country = {
+							owes_obligation_to = root
+						}
+					}
+					AND = {
+						is_at_war = no
+						scope:target_country = { is_at_war = yes }
+					}
+				}
+				# Threshold for breaking off a bankroll is higher than for starting it
+				# We also don't look at weekly_net_fixed_income here since starting a bankroll changes it
+				NOR = {
+					AND = {
+						income >= 40000
+						scope:target_country.income <= 12500
+					}
+					AND = {
+						income >= 50000
+						scope:target_country.income <= 15000
+					}
+					AND = {
+						income >= 75000
+						scope:target_country.income <= 20000
+					}
+					AND = {
+						income >= 100000
+						scope:target_country.income <= 25000
+					}
+					AND = {
+						income >= 125000
+						scope:target_country.income <= 30000
+					}
+					AND = {
+						income >= 150000
+						scope:target_country.income <= 35000
+					}
+					AND = {
+						income >= 175000
+						scope:target_country.income <= 40000
+					}
+					AND = {
+						income >= 200000
+						scope:target_country.income <= 45000
+					}
+					AND = {
+						income >= 225000
+						scope:target_country.income <= 50000
+					}
+					AND = {
+						income >= 250000
+						scope:target_country.income <= 55000
+					}
 				}
 			}
-			scope:machine_gun_general = {
-				add_trait = trench_rat
-			}
-		}
-		else = {
-			scope:machine_gun_general = {
-				add_trait = stalwart_defender
-			}
-		}
-	}
-}
-
-# Ironclads
-military_tech_events.403 = {
-	type = country_event
-	placement = ROOT
-
-	title = military_tech_events.403.t
-	desc = military_tech_events.403.d
-	flavor = military_tech_events.403.f
-
-	duration = 3
-
-	event_image = {
-		video = "unspecific_naval_battle"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/event_military.dds"
-
-	trigger = {
-		# triggered by ironclads JE
-	}
-	immediate = {
-		random_scope_character = {
-			limit = {
-				has_role = admiral
-				commander_military_formation = {
-				   formation_navy_unit_type_fraction = {
-					   target = unit_type:combat_unit_type_ironclad
-					   value >= 0.2
-				   }
-			   }
-			}
-			save_scope_as = ironclad_admiral
-		}
-	}
-
-	option = { #
-		name = military_tech_events.403.a
-		add_modifier = {
-			name = armoured_doctrine
-			months = long_modifier_time
-		}
-	}
-	option = { #
-		name = military_tech_events.403.b
-		add_modifier = {
-			name = ramming_doctrine
-			months = long_modifier_time
-		}
-	}
-	option = { #
-		name = military_tech_events.403.c
-		default_option = yes
-		add_modifier = {
-			name = armoured_high_seas_fleet
-			months = long_modifier_time
-		}
-	}
-}
-
-# Monitors
-military_tech_events.404 = {
-	type = country_event
-	placement = ROOT
-
-	title = military_tech_events.404.t
-	desc = military_tech_events.404.d
-	flavor = military_tech_events.404.f
-
-	duration = 3
-
-	event_image = {
-		video = "unspecific_naval_battle"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/event_military.dds"
-
-	trigger = {
-		# triggered by monitors JE
-	}
-	immediate = {
-		random_scope_character = {
-			limit = {
-				has_role = admiral
-				commander_military_formation = {
-				   formation_navy_unit_type_fraction = {
-					   target = unit_type:combat_unit_type_monitor
-					   value >= 0.2
-				   }
-			   }
-			}
-			save_scope_as = monitor_admiral
-		}
-	}
-	option = { #
-		name = military_tech_events.404.a
-		default_option = yes
-		add_modifier = {
-			name = safer_shores
-			months = long_modifier_time
-		}
-	}
-	option = { #
-		name = military_tech_events.404.b
-		add_modifier = {
-			name = defensive_doctrine
-			months = long_modifier_time
-		}
-	}
-	option = { #
-		name = military_tech_events.404.c
-		add_modifier = {
-			name = quantity_over_quality
-			months = long_modifier_time
 		}
 	}
 }

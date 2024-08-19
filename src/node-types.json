@@ -1,6 +1,34 @@
 [
   {
-    "type": "bool",
+    "type": "boolean",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "comparison_operation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comparison_operator",
+          "named": true
+        },
+        {
+          "type": "value",
+          "named": true
+        },
+        {
+          "type": "varname",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "comparison_operator",
     "named": true,
     "fields": {}
   },
@@ -55,6 +83,10 @@
           "named": true
         },
         {
+          "type": "comparison_operation",
+          "named": true
+        },
+        {
           "type": "object_assignment",
           "named": true
         },
@@ -79,7 +111,7 @@
       "required": true,
       "types": [
         {
-          "type": "bool",
+          "type": "boolean",
           "named": true
         },
         {
@@ -117,11 +149,23 @@
     }
   },
   {
+    "type": "\n",
+    "named": false
+  },
+  {
     "type": "\"",
     "named": false
   },
   {
+    "type": "<=",
+    "named": false
+  },
+  {
     "type": "=",
+    "named": false
+  },
+  {
+    "type": ">=",
     "named": false
   },
   {
