@@ -1,5 +1,10 @@
 [
   {
+    "type": "assignment",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "boolean",
     "named": true,
     "fields": {}
@@ -137,6 +142,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
         {
           "type": "value",
           "named": true

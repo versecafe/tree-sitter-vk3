@@ -49,14 +49,18 @@
           "name": "varname"
         },
         {
-          "type": "STRING",
-          "value": "="
+          "type": "SYMBOL",
+          "name": "assignment"
         },
         {
           "type": "SYMBOL",
           "name": "value"
         }
       ]
+    },
+    "assignment": {
+      "type": "STRING",
+      "value": "="
     },
     "object_assignment": {
       "type": "SEQ",
