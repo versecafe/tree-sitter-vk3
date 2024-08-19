@@ -10,6 +10,11 @@
     "fields": {}
   },
   {
+    "type": "comparison",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "comparison_operation",
     "named": true,
     "fields": {},
@@ -18,7 +23,7 @@
       "required": true,
       "types": [
         {
-          "type": "comparison_operator",
+          "type": "comparison",
           "named": true
         },
         {
@@ -31,11 +36,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "comparison_operator",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "key_value_pair",

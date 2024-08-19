@@ -1,6 +1,6 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
-let a = { b: "f" };
+
 module.exports = grammar({
   name: "vk3",
   extras: ($) => [$.comment, /\s+/], // Allow whitespace
@@ -27,7 +27,7 @@ module.exports = grammar({
     boolean: ($) => choice("yes", "no"), // Matches boolean values
     eol: ($) => choice($.comment, "\n"), // Matches end of line with optional comment
     comparison: ($) => choice("<=", ">="),
-    comparison_operation: ($) =>
-      choice(seq($.varname, $.comparison_operator, $.value)),
+    comparison_operation: ($) => choice(seq($.varname, $.comparison, $.value)),
+    brackets: ($) => seq("{", repeat($.value), "}"),
   },
 });

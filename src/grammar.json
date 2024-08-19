@@ -179,7 +179,7 @@
         }
       ]
     },
-    "comparison_operator": {
+    "comparison": {
       "type": "CHOICE",
       "members": [
         {
@@ -204,13 +204,33 @@
             },
             {
               "type": "SYMBOL",
-              "name": "comparison_operator"
+              "name": "comparison"
             },
             {
               "type": "SYMBOL",
               "name": "value"
             }
           ]
+        }
+      ]
+    },
+    "brackets": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "value"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
         }
       ]
     }
