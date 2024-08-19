@@ -6,19 +6,13 @@ module.exports = grammar({
   extras: ($) => [$.comment, /\s+/], // Allow whitespace
   rules: {
     program: ($) =>
-      repeat(
-        choice(
-          $.comment,
-          $.variable_assignment,
-          $.object_assignment,
-          $.comparison_operation,
-        ),
-      ),
+      repeat(choice($.comment, $.variable_assignment, $.comparison_operation)),
     comment: ($) => token(seq("#", /.*/)),
-    variable_assignment: ($) => seq($.varname, $.assignment, $.value),
+    variable_assignment: ($) =>
+      choice(seq($.varname, $.assignment, $.value), $.object_assignment),
     assignment: ($) => "=",
     object_assignment: ($) =>
-      seq($.varname, "=", "{", repeat($.key_value_pair), "}"),
+      seq($.varname, $.assignment, "{", repeat($.key_value_pair), "}"),
     key_value_pair: ($) => seq($.varname, "=", $.value),
     varname: ($) => /[a-zA-Z_][a-zA-Z0-9_]*/,
     value: ($) => choice($.number, $.string, $.varname, $.boolean),
@@ -28,6 +22,5 @@ module.exports = grammar({
     eol: ($) => choice($.comment, "\n"), // Matches end of line with optional comment
     comparison: ($) => choice("<=", ">="),
     comparison_operation: ($) => choice(seq($.varname, $.comparison, $.value)),
-    brackets: ($) => seq("{", repeat($.value), "}"),
   },
 });

@@ -65,6 +65,10 @@
       "required": true,
       "types": [
         {
+          "type": "assignment",
+          "named": true
+        },
+        {
           "type": "key_value_pair",
           "named": true
         },
@@ -89,10 +93,6 @@
         },
         {
           "type": "comparison_operation",
-          "named": true
-        },
-        {
-          "type": "object_assignment",
           "named": true
         },
         {
@@ -144,6 +144,10 @@
       "types": [
         {
           "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "object_assignment",
           "named": true
         },
         {

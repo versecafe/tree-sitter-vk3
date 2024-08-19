@@ -16,10 +16,6 @@
           },
           {
             "type": "SYMBOL",
-            "name": "object_assignment"
-          },
-          {
-            "type": "SYMBOL",
             "name": "comparison_operation"
           }
         ]
@@ -42,19 +38,28 @@
       }
     },
     "variable_assignment": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "varname"
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "varname"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "assignment"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "value"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
-          "name": "assignment"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "value"
+          "name": "object_assignment"
         }
       ]
     },
@@ -70,8 +75,8 @@
           "name": "varname"
         },
         {
-          "type": "STRING",
-          "value": "="
+          "type": "SYMBOL",
+          "name": "assignment"
         },
         {
           "type": "STRING",
@@ -211,26 +216,6 @@
               "name": "value"
             }
           ]
-        }
-      ]
-    },
-    "brackets": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "{"
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "value"
-          }
-        },
-        {
-          "type": "STRING",
-          "value": "}"
         }
       ]
     }
