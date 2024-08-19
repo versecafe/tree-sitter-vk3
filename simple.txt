@@ -1,0 +1,17 @@
+# Base comment to start file
+# Another comment
+
+military_tech_events = "fdsfs" # Inline comment
+
+type = country_event
+
+default_option = yes
+
+a = 1
+b = 2.0
+
+a = {
+    default_option = yes
+}
+
+NOT = { has_trait = trench_rat }

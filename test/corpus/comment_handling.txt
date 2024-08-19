@@ -1,0 +1,18 @@
+=====
+Comment Handling
+=====
+
+# assign a to bool value of yes
+a = yes
+
+# Second comment # with extra inside, should just be ignored
+
+---
+
+(program
+  (comment)
+  (variable_assignment
+    (varname)
+    (value
+        (bool)))
+  (comment))
